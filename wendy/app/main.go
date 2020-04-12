@@ -1,14 +1,16 @@
 package main
 
 import (
+	"fmt"
+	"github.com/ramosjanoah/eidolmou/wendy/config"
 	"github.com/ramosjanoah/eidolmou/wendy/handler"
 	"log"
 	"net/http"
-	"os"
 )
 
 func main() {
 	router := handler.NewRouter()
-	log.Println("Wendy is listening..")
-	http.ListenAndServe(":"+os.Getenv("PORT"), router)
+	config := config.GetConfig()
+	log.Println(fmt.Sprintf("Wendy is listening in %s..", config.AppPort))
+	http.ListenAndServe(":"+config.AppPort, router)
 }

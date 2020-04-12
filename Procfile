@@ -1,1 +1,1 @@
-web: ls -R && bin/app
+web: bin/app
