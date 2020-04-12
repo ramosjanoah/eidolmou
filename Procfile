@@ -1,1 +1,1 @@
-web: ls -R && go run wendy/app/main.go
+web: ls -R && CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go run wendy/app/main.go
