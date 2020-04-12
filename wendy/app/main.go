@@ -5,12 +5,12 @@ import (
 	"github.com/ramosjanoah/eidolmou/wendy/config"
 	"github.com/ramosjanoah/eidolmou/wendy/handler"
 	"log"
-	"net/http"
+	// "net/http"
 )
 
 func main() {
-	router := handler.NewRouter()
+	bot := handler.NewBot()
 	config := config.GetConfig()
 	log.Println(fmt.Sprintf("Wendy is listening in %s..", config.AppPort))
-	http.ListenAndServe(":"+config.AppPort, router)
+	bot.Start()
 }

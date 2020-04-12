@@ -8,6 +8,7 @@ import (
 type Config struct {
 	AppPort  string
 	BotToken string
+	URL      string
 }
 
 func GetConfig() Config {
@@ -23,8 +24,14 @@ func GetConfig() Config {
 		panic("bot token is empty")
 	}
 
+	url := os.Getenv("WENDY_URL")
+	if url == "" {
+		panic("url is empty")
+	}
+
 	return Config{
 		AppPort:  port,
 		BotToken: botToken,
+		URL:      url,
 	}
 }
