@@ -1,1 +1,1 @@
-web: bin/wendy
+web: ls -R && bin/wendy
