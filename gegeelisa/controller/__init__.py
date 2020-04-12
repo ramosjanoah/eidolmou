@@ -1,0 +1,1 @@
+from .wikipedia_scraper_controller import wikipedia_scrape_blueprint
