@@ -8,6 +8,6 @@ import (
 
 func main() {
 	router := handler.NewRouter()
-	log.Println("Wendy is listening in :2345")
-	http.ListenAndServe(":2345", router)
+	log.Println("Wendy is listening in :80")
+	http.ListenAndServe(":80", router)
 }
