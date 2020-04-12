@@ -1,1 +1,1 @@
-web: ls -R && bin/wendy
+web: ls -R && go run wendy/app/main.go
