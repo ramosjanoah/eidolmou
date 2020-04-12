@@ -9,5 +9,5 @@ import (
 func main() {
 	router := handler.NewRouter()
 	log.Println("Wendy is listening in :80")
-	http.ListenAndServe(":80", router)
+	http.ListenAndServe(":"+os.Getenv("PORT"), router)
 }
