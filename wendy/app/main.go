@@ -1,16 +1,20 @@
 package main
 
 import (
-	"fmt"
-	"github.com/ramosjanoah/eidolmou/wendy/config"
 	"github.com/ramosjanoah/eidolmou/wendy/handler"
-	"log"
-	// "net/http"
+	"os"
+	"os/signal"
+	"syscall"
 )
 
 func main() {
 	bot := handler.NewBot()
-	config := config.GetConfig()
-	log.Println(fmt.Sprintf("Wendy is listening in %s..", config.AppPort))
-	bot.Start()
+
+	go bot.ChatListen()
+	go bot.HttpListen()
+
+	signals := make(chan os.Signal, 1)
+	signal.Notify(signals, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
+
+	<-signals
 }

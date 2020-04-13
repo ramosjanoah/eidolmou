@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-func NewRouter() chi.Router {
+func NewHttpRouter() chi.Router {
 	router := chi.NewRouter()
 	router.Use(middleware.RequestID)
 	router.Use(middleware.Logger)
