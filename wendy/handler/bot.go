@@ -2,6 +2,7 @@ package handler
 
 import (
 	"github.com/ramosjanoah/eidolmou/wendy/config"
+	"github.com/ramosjanoah/eidolmou/wendy/handler/telegram"
 )
 
 type Bot interface {
@@ -12,7 +13,7 @@ type Bot interface {
 func NewBot() Bot {
 	config := config.GetConfig()
 	if config.Platform == "TELEGRAM" {
-		return NewTelegramBot()
+		return telegram.NewBot()
 	} else {
 		panic("Var 'plaftorm' not defined")
 	}

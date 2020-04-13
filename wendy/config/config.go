@@ -9,6 +9,7 @@ type Config struct {
 	AppPort  string
 	BotToken string
 	Platform string
+	Toggle   bool
 }
 
 func GetConfig() Config {
@@ -29,9 +30,22 @@ func GetConfig() Config {
 		panic("bot token is empty")
 	}
 
+	toggleParam := os.Getenv("WENDY_TOGGLE")
+	var toggle bool
+	if toggleParam == "" {
+		panic("toggle is empty")
+	} else {
+		if toggleParam == "1" {
+			toggle = true
+		} else {
+			toggle = false
+		}
+	}
+
 	return Config{
 		AppPort:  port,
 		BotToken: botToken,
 		Platform: platform,
+		Toggle:   toggle,
 	}
 }
