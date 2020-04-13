@@ -55,7 +55,7 @@ func (t *TelegramBot) Initialize() error {
 }
 
 func (t *TelegramBot) initializeHandler() error {
-	t.botServer.HandleMessage("/areyouok", decorate(t.areYouOK))
+	t.botServer.HandleMessage(decorate("/areyouok", t.areYouOK))
 
 	return nil
 }

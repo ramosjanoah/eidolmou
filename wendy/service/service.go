@@ -3,7 +3,7 @@ package service
 type Service struct{}
 
 var (
-	AreYouOKResponse = "Hi! I'm wendy and I'm ok :)"
+	AreYouOKResponse = "Hi! I'm ok, don't worry :)"
 )
 
 type Result struct {
@@ -11,7 +11,7 @@ type Result struct {
 }
 
 func AreYouOK() Result {
-	// There are no logic in AreYouOK so I'll
+	// There are no logic in AreYouOK so I'll just return the response
 
 	return Result{
 		MessageResponse: &AreYouOKResponse,
