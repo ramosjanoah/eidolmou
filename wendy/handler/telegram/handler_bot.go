@@ -62,7 +62,7 @@ func (t *HandlerBot) Heartbeat() {
 		if err != nil {
 			panic(fmt.Sprintf("Heartbeat failed, %s", err.Error()))
 		}
-		time.Sleep(15 * time.Second)
+		time.Sleep(30 * time.Second)
 	}
 }
 
@@ -91,7 +91,7 @@ func (t *HandlerBot) initializeBotHandler() error {
 }
 
 func (t *HandlerBot) initializeHeartbeat() error {
-	t.heartbeatURL = fmt.Sprintf("http://localhost:%s%s", t.HttpPort, http.HeartbeatURL)
+	t.heartbeatURL = http.HeartbeatURL
 	t.heartbeatClient = &netHttp.Client{}
 
 	return nil

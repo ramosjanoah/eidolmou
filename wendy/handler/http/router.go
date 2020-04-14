@@ -8,7 +8,8 @@ import (
 )
 
 var (
-	HeartbeatURL = "/wendy/areyouok"
+	AppURL       = "https://white-wendy.herokuapp.com"
+	HeartbeatURL = AppURL + "/wendy/areyouok"
 )
 
 func NewHttpRouter() chi.Router {
