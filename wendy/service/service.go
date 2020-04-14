@@ -5,7 +5,7 @@ import (
 )
 
 type Service struct {
-	ActionBot *repository.ActionBot
+	ActionBot repository.ActionBot
 }
 
 var (

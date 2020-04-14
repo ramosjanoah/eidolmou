@@ -2,42 +2,18 @@ package repository
 
 import (
 	"github.com/ramosjanoah/eidolmou/wendy/config"
-	"github.com/yanzay/tbot/v2"
-	"net/http"
-	"strconv"
-	"time"
+	"github.com/ramosjanoah/eidolmou/wendy/repository/telegrambot"
 )
 
-type ActionBot struct {
-	BotClient *tbot.Client
+type ActionBot interface {
+	SendMessage(targetID int64, message string) error
+	SendAnimation(targetID int64, animationURL string) error
 }
 
-var (
-	actionBot = &ActionBot{}
-	ApiURL    = "https://api.telegram.org"
-)
-
-func init() {
-	httpClient := http.Client{
-		Timeout: 10 * time.Second,
+func NewActionBot() ActionBot {
+	if config.Platform == "TELEGRAM" {
+		return telegrambot.NewActionBot()
 	}
-	botClient := tbot.NewClient(config.BotToken, &httpClient, ApiURL)
 
-	actionBot.BotClient = botClient
-}
-
-func NewActionBot() *ActionBot {
-	return actionBot
-}
-
-func (a *ActionBot) SendMessage(targetID int64, message string) error {
-
-	_, err := a.BotClient.SendMessage(strconv.Itoa(int(targetID)), message)
-	return err
-
-}
-
-func (a *ActionBot) SendAnimation(targetID int64, animationURL string) error {
-	_, err := a.BotClient.SendAnimation(strconv.Itoa(int(targetID)), animationURL)
-	return err
+	panic("Platform value is nil")
 }

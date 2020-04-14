@@ -5,12 +5,12 @@ import (
 	"github.com/ramosjanoah/eidolmou/wendy/handler/telegram"
 )
 
-type Bot interface {
+type HandlerBot interface {
 	ChatListen()
 	HttpListen()
 }
 
-func NewHandlerBot() Bot {
+func NewHandlerBot() HandlerBot {
 	if config.Platform == "TELEGRAM" {
 		return telegram.NewHandlerBot()
 	} else {

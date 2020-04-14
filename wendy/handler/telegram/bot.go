@@ -10,15 +10,15 @@ import (
 	netHttp "net/http"
 )
 
-type TelegramBot struct {
+type HandlerBot struct {
 	Token    string
 	HttpPort string
 
 	botServer *tbot.Server
 }
 
-func NewHandlerBot() *TelegramBot {
-	t := &TelegramBot{
+func NewHandlerBot() *HandlerBot {
+	t := &HandlerBot{
 		Token:    config.BotToken,
 		HttpPort: config.AppPort,
 	}
@@ -31,18 +31,18 @@ func NewHandlerBot() *TelegramBot {
 	return t
 }
 
-func (t *TelegramBot) ChatListen() {
+func (t *HandlerBot) ChatListen() {
 	log.Println("Wendy is listening for your chat..")
 	t.botServer.Start()
 }
 
-func (t *TelegramBot) HttpListen() {
+func (t *HandlerBot) HttpListen() {
 	router := http.NewHttpRouter()
 	log.Println(fmt.Sprintf("Wendy is listening to your HTTP request in :%s", t.HttpPort))
 	log.Println(netHttp.ListenAndServe(":"+t.HttpPort, router))
 }
 
-func (t *TelegramBot) Initialize() error {
+func (t *HandlerBot) Initialize() error {
 	t.botServer = tbot.New(t.Token)
 
 	t.initializeHandler()
@@ -50,7 +50,7 @@ func (t *TelegramBot) Initialize() error {
 	return nil
 }
 
-func (t *TelegramBot) initializeHandler() error {
+func (t *HandlerBot) initializeHandler() error {
 	// create handling message here
 
 	t.botServer.HandleMessage(decorate("/areyouok", t.areYouOK))
@@ -58,7 +58,7 @@ func (t *TelegramBot) initializeHandler() error {
 	return nil
 }
 
-func (t *TelegramBot) areYouOK(m *tbot.Message) error {
+func (t *HandlerBot) areYouOK(m *tbot.Message) error {
 	_, err := service.AreYouOK(int64(m.From.ID))
 	if err != nil {
 		return err
