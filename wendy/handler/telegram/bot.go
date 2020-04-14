@@ -14,7 +14,6 @@ type TelegramBot struct {
 	Token    string
 	HttpPort string
 
-	botClient *tbot.Client
 	botServer *tbot.Server
 }
 
@@ -45,7 +44,6 @@ func (t *TelegramBot) HttpListen() {
 
 func (t *TelegramBot) Initialize() error {
 	t.botServer = tbot.New(t.Token)
-	t.botClient = t.botServer.Client()
 
 	t.initializeHandler()
 
@@ -61,9 +59,7 @@ func (t *TelegramBot) initializeHandler() error {
 }
 
 func (t *TelegramBot) areYouOK(m *tbot.Message) error {
-	result := service.AreYouOK()
-
-	_, err := t.botClient.SendMessage(m.Chat.ID, *result.MessageResponse)
+	_, err := service.AreYouOK(int64(m.From.ID))
 	if err != nil {
 		return err
 	}

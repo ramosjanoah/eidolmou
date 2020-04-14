@@ -1,19 +1,25 @@
 package service
 
-type Service struct{}
+import (
+	"github.com/ramosjanoah/eidolmou/wendy/repository"
+)
+
+type Service struct {
+	ActionBot *repository.ActionBot
+}
 
 var (
+	service          = Service{}
 	AreYouOKResponse = "Hi! I'm ok, don't worry :)"
 )
 
-type Result struct {
-	MessageResponse *string
+func init() {
+	service.ActionBot = repository.NewActionBot()
 }
 
-func AreYouOK() Result {
+func AreYouOK(targetID int64) (string, error) {
 	// There are no logic in AreYouOK so I'll just return the response
 
-	return Result{
-		MessageResponse: &AreYouOKResponse,
-	}
+	service.ActionBot.SendMessage(targetID, AreYouOKResponse)
+	return AreYouOKResponse, nil
 }
