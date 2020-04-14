@@ -11,7 +11,6 @@ type Bot interface {
 }
 
 func NewBot() Bot {
-	config := config.GetConfig()
 	if config.Platform == "TELEGRAM" {
 		return telegram.NewBot()
 	} else {

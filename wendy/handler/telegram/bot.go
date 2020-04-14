@@ -19,7 +19,6 @@ type TelegramBot struct {
 }
 
 func NewBot() *TelegramBot {
-	config := config.GetConfig()
 	t := &TelegramBot{
 		Token:    config.BotToken,
 		HttpPort: config.AppPort,
@@ -48,13 +47,14 @@ func (t *TelegramBot) Initialize() error {
 	t.botServer = tbot.New(t.Token)
 	t.botClient = t.botServer.Client()
 
-	// create handling message here
 	t.initializeHandler()
 
 	return nil
 }
 
 func (t *TelegramBot) initializeHandler() error {
+	// create handling message here
+
 	t.botServer.HandleMessage(decorate("/areyouok", t.areYouOK))
 
 	return nil

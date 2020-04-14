@@ -5,47 +5,40 @@ import (
 	"os"
 )
 
-type Config struct {
+var (
 	AppPort  string
-	BotToken string
 	Platform string
-	Toggle   bool
-}
 
-func GetConfig() Config {
+	BotToken  string
+	BotToggle bool
+)
+
+func init() {
 	gotenv.Load()
 
-	platform := os.Getenv("WENDY_PLATFORM")
-	if platform == "" {
-		platform = "TELEGRAM"
+	Platform = os.Getenv("WENDY_PLATFORM")
+	if Platform == "" {
+		Platform = "TELEGRAM"
 	}
 
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = os.Getenv("WENDY_PORT")
+	AppPort = os.Getenv("PORT")
+	if AppPort == "" {
+		AppPort = os.Getenv("WENDY_PORT")
 	}
 
-	botToken := os.Getenv("WENDY_TOKEN")
-	if botToken == "" {
+	BotToken = os.Getenv("WENDY_TOKEN")
+	if BotToken == "" {
 		panic("bot token is empty")
 	}
 
 	toggleParam := os.Getenv("WENDY_TOGGLE")
-	var toggle bool
 	if toggleParam == "" {
 		panic("toggle is empty")
 	} else {
 		if toggleParam == "1" {
-			toggle = true
+			BotToggle = true
 		} else {
-			toggle = false
+			BotToggle = false
 		}
-	}
-
-	return Config{
-		AppPort:  port,
-		BotToken: botToken,
-		Platform: platform,
-		Toggle:   toggle,
 	}
 }

@@ -16,9 +16,9 @@ func decorate(command string, handleFunc func(m *tbot.Message) error) (string, f
 
 		elapsedTime := time.Since(startTime).Seconds()
 		if err != nil {
-			log.Println(fmt.Sprintf(`{"state":"failed", "duration":%g, "caller":"%s"}`, elapsedTime, command))
+			log.Println(fmt.Sprintf(`{"state":"failed", "duration":%g, "function_caller":"%s"}`, elapsedTime, command))
 		} else {
-			log.Println(fmt.Sprintf(`{"state":"success", "duration":%g, "caller":"%s"}`, elapsedTime, command))
+			log.Println(fmt.Sprintf(`{"state":"success", "duration":%g, "function_caller":"%s"}`, elapsedTime, command))
 		}
 	}
 

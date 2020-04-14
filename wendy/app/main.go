@@ -10,8 +10,7 @@ import (
 )
 
 func main() {
-	config := config.GetConfig()
-	if config.Toggle {
+	if config.BotToggle {
 		bot := handler.NewBot()
 
 		go bot.ChatListen()
