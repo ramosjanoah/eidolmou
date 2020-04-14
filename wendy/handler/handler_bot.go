@@ -8,6 +8,7 @@ import (
 type HandlerBot interface {
 	ChatListen()
 	HttpListen()
+	Heartbeat()
 }
 
 func NewHandlerBot() HandlerBot {

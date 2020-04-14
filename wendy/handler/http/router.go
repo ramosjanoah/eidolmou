@@ -7,6 +7,10 @@ import (
 	"net/http"
 )
 
+var (
+	HeartbeatURL = "/wendy/areyouok"
+)
+
 func NewHttpRouter() chi.Router {
 	router := chi.NewRouter()
 	router.Use(middleware.RequestID)

@@ -8,6 +8,7 @@ import (
 	"github.com/yanzay/tbot/v2"
 	"log"
 	netHttp "net/http"
+	"time"
 )
 
 type HandlerBot struct {
@@ -15,6 +16,9 @@ type HandlerBot struct {
 	HttpPort string
 
 	botServer *tbot.Server
+
+	heartbeatClient *netHttp.Client
+	heartbeatURL    string
 }
 
 func NewHandlerBot() *HandlerBot {
@@ -38,22 +42,57 @@ func (t *HandlerBot) ChatListen() {
 
 func (t *HandlerBot) HttpListen() {
 	router := http.NewHttpRouter()
+
 	log.Println(fmt.Sprintf("Wendy is listening to your HTTP request in :%s", t.HttpPort))
 	log.Println(netHttp.ListenAndServe(":"+t.HttpPort, router))
+}
+
+func (t *HandlerBot) Heartbeat() {
+	if !config.HeartbeatToggle {
+		return
+	}
+
+	req, err := netHttp.NewRequest("GET", t.heartbeatURL, nil)
+	if err != nil {
+		panic("Heartbeat failed")
+	}
+
+	for {
+		_, err = t.heartbeatClient.Do(req)
+		if err != nil {
+			panic(fmt.Sprintf("Heartbeat failed, %s", err.Error()))
+		}
+		time.Sleep(2 * time.Second)
+	}
 }
 
 func (t *HandlerBot) Initialize() error {
 	t.botServer = tbot.New(t.Token)
 
-	t.initializeHandler()
+	err := t.initializeBotHandler()
+	if err != nil {
+		return err
+	}
+
+	err = t.initializeHeartbeat()
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
 
-func (t *HandlerBot) initializeHandler() error {
+func (t *HandlerBot) initializeBotHandler() error {
 	// create handling message here
 
 	t.botServer.HandleMessage(decorate("/areyouok", t.areYouOK))
+
+	return nil
+}
+
+func (t *HandlerBot) initializeHeartbeat() error {
+	t.heartbeatURL = fmt.Sprintf("http://localhost:%s%s", t.HttpPort, http.HeartbeatURL)
+	t.heartbeatClient = &netHttp.Client{}
 
 	return nil
 }

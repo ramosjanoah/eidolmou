@@ -13,6 +13,9 @@ var (
 	BotToggle bool
 
 	CurrentDir string
+
+	HeartbeatURL    string
+	HeartbeatToggle bool
 )
 
 func init() {
@@ -33,9 +36,9 @@ func init() {
 		panic("bot token is empty")
 	}
 
-	toggleParam := os.Getenv("WENDY_TOGGLE")
+	toggleParam := os.Getenv("WENDY_BOT_TOGGLE")
 	if toggleParam == "" {
-		panic("toggle is empty")
+		panic("Bot toggle is empty")
 	} else {
 		if toggleParam == "1" {
 			BotToggle = true
@@ -49,4 +52,16 @@ func init() {
 		panic("error when getting current directory")
 	}
 	CurrentDir = dir
+
+	toggleParam = os.Getenv("WENDY_HEARTBEAT_TOGGLE")
+	if toggleParam == "" {
+		panic("Heartbeattoggle is empty")
+	} else {
+		if toggleParam == "1" {
+			HeartbeatToggle = true
+		} else {
+			HeartbeatToggle = false
+		}
+	}
+
 }
