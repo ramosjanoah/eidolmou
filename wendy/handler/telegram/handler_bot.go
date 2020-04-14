@@ -62,7 +62,7 @@ func (t *HandlerBot) Heartbeat() {
 		if err != nil {
 			panic(fmt.Sprintf("Heartbeat failed, %s", err.Error()))
 		}
-		time.Sleep(30 * time.Second)
+		time.Sleep(3 * time.Minute)
 	}
 }
 
