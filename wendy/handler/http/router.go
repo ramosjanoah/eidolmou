@@ -21,7 +21,7 @@ func NewHttpRouter() chi.Router {
 
 	router.Route("/wendy", func(router chi.Router) {
 		router.Get("/areyouok", func(w http.ResponseWriter, r *http.Request) {
-			w.Write([]byte(service.AreYouOKResponse))
+			w.Write([]byte(service.AreYouOKResponseMsg))
 		})
 	})
 

@@ -97,11 +97,7 @@ func (t *HandlerBot) initializeHeartbeat() error {
 	return nil
 }
 
-func (t *HandlerBot) areYouOK(m *tbot.Message) error {
-	_, err := service.AreYouOK(int64(m.From.ID))
-	if err != nil {
-		return err
-	}
-
-	return nil
+func (t *HandlerBot) areYouOK(m *tbot.Message) (err error) {
+	_, err = service.AreYouOK(int64(m.From.ID))
+	return err
 }

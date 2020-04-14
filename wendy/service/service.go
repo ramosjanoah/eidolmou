@@ -1,8 +1,11 @@
 package service
 
 import (
+	"fmt"
 	"github.com/ramosjanoah/eidolmou/wendy/config"
 	"github.com/ramosjanoah/eidolmou/wendy/repository"
+	"math/rand"
+	"time"
 )
 
 type Service struct {
@@ -12,7 +15,14 @@ type Service struct {
 var (
 	service = Service{}
 
-	AreYouOKResponse = "Hi! I'm ok, don't worry :)"
+	WendyGifs = []string{
+		"wendy-hi",
+		"wendy-swag",
+		"wendy-love-thumbs",
+	}
+
+	AreYouOKResponseMsg = "Hi! I'm ok, don't worry :)"
+	PleaseCheckMeMsg    = "Hi, check me please :("
 )
 
 func init() {
@@ -20,17 +30,28 @@ func init() {
 }
 
 func AreYouOK(targetID int64) (string, error) {
-	// There are no logic in AreYouOK so I'll just return the response
-
-	err := service.ActionBot.SendMessage(targetID, AreYouOKResponse)
+	// pick random animation file
+	rand.Seed(time.Now().Unix())
+	pickedFile := fmt.Sprintf("%s/wendy/asset/%s.gif", config.CurrentDir, WendyGifs[rand.Int()%len(WendyGifs)])
+	err := service.ActionBot.SendAnimationFile(targetID, pickedFile)
 	if err != nil {
 		return "", err
 	}
 
-	err = service.ActionBot.SendAnimationFile(targetID, config.CurrentDir+"/wendy/asset/wendy-hi.gif")
+	// send message response for 'are you ok'
+	err = service.ActionBot.SendMessage(targetID, AreYouOKResponseMsg)
 	if err != nil {
 		return "", err
 	}
 
-	return AreYouOKResponse, nil
+	return AreYouOKResponseMsg, nil
+}
+
+func PleaseCheckMe() error {
+	if config.AdminID == 0 {
+		return nil
+	}
+
+	// send check me message to admin
+	return service.ActionBot.SendMessage(config.AdminID, PleaseCheckMeMsg)
 }
