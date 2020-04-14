@@ -39,3 +39,8 @@ func (a *ActionBot) SendAnimation(targetID int64, animationURL string) error {
 	_, err := a.BotClient.SendAnimation(strconv.Itoa(int(targetID)), animationURL)
 	return err
 }
+
+func (a *ActionBot) SendAnimationFile(targetID int64, animationFilename string) error {
+	_, err := a.BotClient.SendAnimationFile(strconv.Itoa(int(targetID)), animationFilename)
+	return err
+}

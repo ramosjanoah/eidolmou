@@ -1,6 +1,7 @@
 package service
 
 import (
+	"github.com/ramosjanoah/eidolmou/wendy/config"
 	"github.com/ramosjanoah/eidolmou/wendy/repository"
 )
 
@@ -23,7 +24,12 @@ func AreYouOK(targetID int64) (string, error) {
 
 	err := service.ActionBot.SendMessage(targetID, AreYouOKResponse)
 	if err != nil {
-		return "", nil
+		return "", err
+	}
+
+	err = service.ActionBot.SendAnimationFile(targetID, config.CurrentDir+"/wendy/asset/wendy-hi.gif")
+	if err != nil {
+		return "", err
 	}
 
 	return AreYouOKResponse, nil

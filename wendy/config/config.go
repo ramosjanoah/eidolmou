@@ -11,6 +11,8 @@ var (
 
 	BotToken  string
 	BotToggle bool
+
+	CurrentDir string
 )
 
 func init() {
@@ -41,4 +43,10 @@ func init() {
 			BotToggle = false
 		}
 	}
+
+	dir, err := os.Getwd()
+	if err != nil {
+		panic("error when getting current directory")
+	}
+	CurrentDir = dir
 }
