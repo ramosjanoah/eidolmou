@@ -10,9 +10,9 @@ type Bot interface {
 	HttpListen()
 }
 
-func NewBot() Bot {
+func NewHandlerBot() Bot {
 	if config.Platform == "TELEGRAM" {
-		return telegram.NewBot()
+		return telegram.NewHandlerBot()
 	} else {
 		panic("Var 'plaftorm' not defined")
 	}

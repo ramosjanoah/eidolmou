@@ -9,7 +9,8 @@ type Service struct {
 }
 
 var (
-	service          = Service{}
+	service = Service{}
+
 	AreYouOKResponse = "Hi! I'm ok, don't worry :)"
 )
 
@@ -20,6 +21,10 @@ func init() {
 func AreYouOK(targetID int64) (string, error) {
 	// There are no logic in AreYouOK so I'll just return the response
 
-	service.ActionBot.SendMessage(targetID, AreYouOKResponse)
+	err := service.ActionBot.SendMessage(targetID, AreYouOKResponse)
+	if err != nil {
+		return "", nil
+	}
+
 	return AreYouOKResponse, nil
 }

@@ -17,7 +17,7 @@ type TelegramBot struct {
 	botServer *tbot.Server
 }
 
-func NewBot() *TelegramBot {
+func NewHandlerBot() *TelegramBot {
 	t := &TelegramBot{
 		Token:    config.BotToken,
 		HttpPort: config.AppPort,

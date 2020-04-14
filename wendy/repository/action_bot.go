@@ -33,9 +33,11 @@ func NewActionBot() *ActionBot {
 func (a *ActionBot) SendMessage(targetID int64, message string) error {
 
 	_, err := a.BotClient.SendMessage(strconv.Itoa(int(targetID)), message)
-	if err == nil {
-		return err
-	}
+	return err
 
-	return nil
+}
+
+func (a *ActionBot) SendAnimation(targetID int64, animationURL string) error {
+	_, err := a.BotClient.SendAnimation(strconv.Itoa(int(targetID)), animationURL)
+	return err
 }

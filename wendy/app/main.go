@@ -11,7 +11,7 @@ import (
 
 func main() {
 	if config.BotToggle {
-		bot := handler.NewBot()
+		bot := handler.NewHandlerBot()
 
 		go bot.ChatListen()
 		go bot.HttpListen()
