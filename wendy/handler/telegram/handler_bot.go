@@ -86,6 +86,7 @@ func (t *HandlerBot) initializeBotHandler() error {
 	// create handling message here
 
 	t.botServer.HandleMessage(decorate("/areyouok", t.areYouOK))
+	t.botServer.HandleMessage(decorate("/sendmegif", t.sendMeGif))
 
 	return nil
 }
@@ -100,4 +101,8 @@ func (t *HandlerBot) initializeHeartbeat() error {
 func (t *HandlerBot) areYouOK(m *tbot.Message) (err error) {
 	_, err = service.AreYouOK(int64(m.From.ID))
 	return err
+}
+
+func (t *HandlerBot) sendMeGif(m *tbot.Message) (err error) {
+	return service.SendMeGif(int64(m.From.ID))
 }

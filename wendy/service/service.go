@@ -30,16 +30,8 @@ func init() {
 }
 
 func AreYouOK(targetID int64) (string, error) {
-	// pick random animation file
-	rand.Seed(time.Now().Unix())
-	pickedFile := fmt.Sprintf("%s/wendy/asset/%s.gif", config.CurrentDir, WendyGifs[rand.Int()%len(WendyGifs)])
-	err := service.ActionBot.SendAnimationFile(targetID, pickedFile)
-	if err != nil {
-		return "", err
-	}
-
 	// send message response for 'are you ok'
-	err = service.ActionBot.SendMessage(targetID, AreYouOKResponseMsg)
+	err := service.ActionBot.SendMessage(targetID, AreYouOKResponseMsg)
 	if err != nil {
 		return "", err
 	}
@@ -54,4 +46,12 @@ func PleaseCheckMe() error {
 
 	// send check me message to admin
 	return service.ActionBot.SendMessage(config.AdminID, PleaseCheckMeMsg)
+}
+
+func SendMeGif(targetID int64) error {
+	// pick random animation file
+	rand.Seed(time.Now().Unix())
+	pickedFile := fmt.Sprintf("%s/wendy/asset/%s.gif", config.CurrentDir, WendyGifs[rand.Int()%len(WendyGifs)])
+	return service.ActionBot.SendAnimationFile(targetID, pickedFile)
+
 }
