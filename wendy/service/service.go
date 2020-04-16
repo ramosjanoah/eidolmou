@@ -8,30 +8,17 @@ import (
 	"time"
 )
 
-type Service struct {
-	ActionBot repository.ActionBot
-}
+// list all the repository needed for this service
+var ActionBotRepository repository.ActionBotRepository
 
-var (
-	service = Service{}
-
-	WendyGifs = []string{
-		"wendy-hi",
-		"wendy-swag",
-		"wendy-love-thumbs",
-	}
-
-	AreYouOKResponseMsg = "Hi! I'm ok, don't worry :)"
-	PleaseCheckMeMsg    = "Hi, check me please :("
-)
-
+// initialize the repository
 func init() {
-	service.ActionBot = repository.NewActionBot()
+	ActionBotRepository := repository.GetActionBot()
 }
 
 func AreYouOK(targetID int64) (string, error) {
 	// send message response for 'are you ok'
-	err := service.ActionBot.SendMessage(targetID, AreYouOKResponseMsg)
+	err := ActionBotRepository.SendMessage(targetID, AreYouOKResponseMsg)
 	if err != nil {
 		return "", err
 	}
@@ -45,13 +32,13 @@ func PleaseCheckMe() error {
 	}
 
 	// send check me message to admin
-	return service.ActionBot.SendMessage(config.AdminID, PleaseCheckMeMsg)
+	return ActionBotRepository.SendMessage(config.AdminID, PleaseCheckMeMsg)
 }
 
 func SendMeGif(targetID int64) error {
 	// pick random animation file
 	rand.Seed(time.Now().Unix())
 	pickedFile := fmt.Sprintf("%s/wendy/asset/%s.gif", config.CurrentDir, WendyGifs[rand.Int()%len(WendyGifs)])
-	return service.ActionBot.SendAnimationFile(targetID, pickedFile)
+	return ActionBotRepository.SendAnimationFile(targetID, pickedFile)
 
 }
