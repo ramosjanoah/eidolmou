@@ -20,6 +20,8 @@ var (
 	HeartbeatToggle bool
 
 	AdminID int64
+
+	SqlDatabase string
 )
 
 func init() {
@@ -35,6 +37,7 @@ func init() {
 	}
 	BotToken = getStringConfig("WENDY_TOKEN", "", true)
 	Platform = getStringConfig("WENDY_PLATFORM", "", true)
+	SqlDatabase = getStringConfig("WENDY_SQL_DATABASE", "POSTRES", false)
 
 	// Toggle or boolean
 	BotToggle = getBoolConfig("WENDY_BOT_TOGGLE", true, true)
