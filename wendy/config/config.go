@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"github.com/subosito/gotenv"
 	"os"
 	"strconv"
@@ -24,58 +25,66 @@ var (
 func init() {
 	gotenv.Load()
 
-	// Platform
-	Platform = os.Getenv("WENDY_PLATFORM")
-	if Platform == "" {
-		Platform = "TELEGRAM"
-	}
+	// int64
+	AdminID = getIntConfig("WENDY_ADMIN_ID", 0, true)
 
-	// App port
-	AppPort = os.Getenv("PORT")
+	// string
+	AppPort = getStringConfig("WENDY_PORT", "", false)
 	if AppPort == "" {
-		AppPort = os.Getenv("WENDY_PORT")
+		AppPort = getStringConfig("PORT", "", true)
 	}
+	BotToken = getStringConfig("WENDY_TOKEN", "", true)
+	Platform = getStringConfig("WENDY_PLATFORM", "", true)
 
-	// Bot Token
-	BotToken = os.Getenv("WENDY_TOKEN")
-	if BotToken == "" {
-		panic("bot token is empty")
-	}
+	// Toggle or boolean
+	BotToggle = getBoolConfig("WENDY_BOT_TOGGLE", true, true)
+	HeartbeatToggle = getBoolConfig("WENDY_HEARTBEAT_TOGGLE", true, true)
 
-	// Bot Toggle
-	toggleParam := os.Getenv("WENDY_BOT_TOGGLE")
-	if toggleParam == "" {
-		panic("Bot toggle is empty")
-	} else {
-		if toggleParam == "1" {
-			BotToggle = true
-		} else {
-			BotToggle = false
-		}
-	}
-
-	// Current directory
+	// get current directory
 	dir, err := os.Getwd()
 	if err != nil {
 		panic("error when getting current directory")
 	}
 	CurrentDir = dir
 
-	// Heartbeat
-	toggleParam = os.Getenv("WENDY_HEARTBEAT_TOGGLE")
-	if toggleParam == "" {
-		panic("Heartbeattoggle is empty")
-	} else {
-		if toggleParam == "1" {
-			HeartbeatToggle = true
-		} else {
-			HeartbeatToggle = false
+}
+
+func getStringConfig(envName string, defaultValue string, callPanic bool) string {
+	temp := os.Getenv(envName)
+	if temp == "" {
+		if callPanic {
+			panic(fmt.Sprintf("%s is empty!", envName))
 		}
+
+		temp = defaultValue
 	}
 
-	// AdminID
-	adminIDStr := os.Getenv("WENDY_ADMIN_ID")
-	adminIDInt, _ := strconv.Atoi(adminIDStr)
-	AdminID = int64(adminIDInt)
+	return temp
+}
 
+func getBoolConfig(envName string, defaultValue bool, callPanic bool) bool {
+	defaultValueStr := "false"
+	if defaultValue {
+		defaultValueStr = "true"
+	}
+
+	temp := getStringConfig(envName, defaultValueStr, callPanic)
+
+	if temp == "1" || temp == "true" || temp == "TRUE" {
+		return true
+	}
+	return false
+}
+
+func getIntConfig(envName string, defaultValue int64, callPanic bool) int64 {
+	defaultValueStr := strconv.Itoa(int(defaultValue))
+
+	temp := getStringConfig(envName, defaultValueStr, callPanic)
+
+	tempInt, err := strconv.Atoi(temp)
+	if err != nil {
+		panic(fmt.Sprintf("Error when parsing %s for integer value: %s", envName, temp))
+	}
+
+	return int64(tempInt)
 }
