@@ -35,7 +35,7 @@ func PleaseCheckMe() error {
 }
 
 func ErrorResponseCallback(targetID int64, err error) error {
-	return ActionBot.SendMessage(targetID, sugarCoatError(err))
+	return ActionBot.SendMessage(targetID, err.Error())
 }
 
 func sugarCoatError(err error) string {

@@ -3,11 +3,14 @@ package telegram
 import (
 	"fmt"
 	"github.com/ramosjanoah/eidolmou/wendy/config"
+	"github.com/ramosjanoah/eidolmou/wendy/errors"
 	"github.com/ramosjanoah/eidolmou/wendy/handler/http"
 	service "github.com/ramosjanoah/eidolmou/wendy/service"
 	"github.com/yanzay/tbot/v2"
 	"log"
 	netHttp "net/http"
+	"strconv"
+	"strings"
 	"time"
 )
 
@@ -90,8 +93,20 @@ func (t *HandlerBot) initializeBotHandler() error {
 	// see tgif_handler.go
 	t.botServer.HandleMessage(decorate("/sendmegif", t.sendMeGif))
 
-	// TODO: change this handling
-	t.botServer.HandleMessage(decorate("", t.addGif))
+	// handle the message that
+	t.botServer.HandleMessage(decorate("", func(m *tbot.Message) error {
+
+		// handling document and get the command from caption
+		if m.Document != nil {
+			pattern, _ := parseCaption(m.Caption)
+			switch pattern {
+			case "/addGif":
+				return t.addGif(m)
+			}
+		}
+
+		return errors.DontUnderstandError()
+	}))
 
 	return nil
 }
@@ -106,4 +121,35 @@ func (t *HandlerBot) initializeHeartbeat() error {
 func (t *HandlerBot) areYouOK(m *tbot.Message) (err error) {
 	_, err = service.AreYouOK(int64(m.From.ID))
 	return err
+}
+
+func parseCaption(caption string) (string, map[string]string) {
+	splittedCaption := strings.Split(caption, " ")
+
+	command := ""
+	args := map[string]string{}
+	var key, value string
+
+	for i, c := range splittedCaption {
+		if i == 0 && c[0] == '/' {
+			command = c
+			continue
+		}
+
+		key, value = parseArg(c, strconv.Itoa(i))
+		args[key] = value
+	}
+
+	log.Println(args)
+
+	return command, args
+}
+
+func parseArg(str string, defaultKey string) (key string, value string) {
+	splittedStr := strings.Split(str, "=")
+	if len(splittedStr) == 2 {
+		return splittedStr[0], splittedStr[1]
+	} else {
+		return defaultKey, str
+	}
 }

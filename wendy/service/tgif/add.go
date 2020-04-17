@@ -1,7 +1,7 @@
 package tgif
 
 import (
-	"log"
+	"github.com/ramosjanoah/eidolmou/wendy/errors"
 )
 
 type AddForm struct {
@@ -10,11 +10,29 @@ type AddForm struct {
 	AdderID int64
 }
 
-// TODO: create form validation here
+func (f *AddForm) Validate() (err error) {
+	if f.Name == "" {
+		return errors.MissingParameterError("name")
+	}
+
+	if f.FileID == "" {
+		return errors.MissingParameterError("document: animation")
+	}
+
+	if f.AdderID == 0 {
+		return errors.MissingParameterError("user")
+	}
+
+	return nil
+
+}
 
 func AddNewGif(form AddForm) (TGif, error) {
-	// TODO: add gif to psql here
-	log.Println("Congrats, you got here :)")
-	log.Println(form)
+	err := form.Validate()
+	if err != nil {
+		return TGif{}, err
+	}
+
+	ActionBot.SendMessage(form.AdderID, "Congrats, you succeeded to add this gif :)")
 	return TGif{}, nil
 }

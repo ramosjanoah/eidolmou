@@ -20,11 +20,11 @@ func decorate(command string, handleFunc func(m *tbot.Message) error) (string, f
 			elapsedTime := time.Since(startTime).Seconds()
 
 			if r := recover(); r != nil {
-				_ = service.ErrorResponseCallback(int64(m.From.ID), err)
 				err = errors.New(r.(string))
 			}
 
 			if err != nil {
+				_ = service.ErrorResponseCallback(int64(m.From.ID), err)
 				log.Println(fmt.Sprintf(`{"state":"failed", "msg": "%s", "duration":%g, "function_caller":"%s"}`, err.Error(), elapsedTime, command))
 			} else {
 				log.Println(fmt.Sprintf(`{"state":"success", "duration":%g, "function_caller":"%s"}`, elapsedTime, command))
