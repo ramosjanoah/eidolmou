@@ -15,7 +15,6 @@ func (t *HandlerBot) addGif(m *tbot.Message) (err error) {
 	if m.Caption == "" {
 		return errors.PayloadMissingError()
 	}
-
 	_, args := parseCaption(m.Caption)
 
 	if m.Document == nil {
@@ -33,10 +32,5 @@ func (t *HandlerBot) addGif(m *tbot.Message) (err error) {
 	}
 
 	_, err = tgifService.AddNewGif(addForm)
-
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return err
 }
