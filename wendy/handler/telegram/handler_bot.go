@@ -140,8 +140,6 @@ func parseCaption(caption string) (string, map[string]string) {
 		args[key] = value
 	}
 
-	log.Println(args)
-
 	return command, args
 }
 
