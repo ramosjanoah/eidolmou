@@ -1,4 +1,4 @@
-package gifservice
+package tgif
 
 import (
 	"github.com/ramosjanoah/eidolmou/wendy/repository"
@@ -11,4 +11,11 @@ var ActionBot repository.ActionBotRepository
 // initialize the repository
 func init() {
 	ActionBot = actionbot.GetActionBot()
+}
+
+type TGif struct {
+	Name          string
+	FileID        string
+	AdderUsername string
+	Valid         string
 }

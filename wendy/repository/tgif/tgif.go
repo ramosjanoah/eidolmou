@@ -1,4 +1,4 @@
-package gif
+package tgif
 
 import (
 	"github.com/ramosjanoah/eidolmou/wendy/config"

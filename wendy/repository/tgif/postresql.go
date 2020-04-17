@@ -1,4 +1,4 @@
-package actionbot
+package tgif
 
 import (
 	"github.com/ramosjanoah/eidolmou/wendy/config"

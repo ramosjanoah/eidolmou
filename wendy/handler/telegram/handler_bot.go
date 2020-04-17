@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/ramosjanoah/eidolmou/wendy/config"
 	"github.com/ramosjanoah/eidolmou/wendy/handler/http"
-	"github.com/ramosjanoah/eidolmou/wendy/service"
+	service "github.com/ramosjanoah/eidolmou/wendy/service"
 	"github.com/yanzay/tbot/v2"
 	"log"
 	netHttp "net/http"
@@ -86,7 +86,12 @@ func (t *HandlerBot) initializeBotHandler() error {
 	// create handling message here
 
 	t.botServer.HandleMessage(decorate("/areyouok", t.areYouOK))
+
+	// see tgif_handler.go
 	t.botServer.HandleMessage(decorate("/sendmegif", t.sendMeGif))
+
+	// TODO: change this handling
+	t.botServer.HandleMessage(decorate("", t.addGif))
 
 	return nil
 }
@@ -101,8 +106,4 @@ func (t *HandlerBot) initializeHeartbeat() error {
 func (t *HandlerBot) areYouOK(m *tbot.Message) (err error) {
 	_, err = service.AreYouOK(int64(m.From.ID))
 	return err
-}
-
-func (t *HandlerBot) sendMeGif(m *tbot.Message) (err error) {
-	return service.SendMeGif(int64(m.From.ID))
 }
