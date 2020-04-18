@@ -7,4 +7,5 @@ require (
 	github.com/subosito/gotenv v1.2.0
 	github.com/yanzay/tbot v2.0.0+incompatible
 	github.com/yanzay/tbot/v2 v2.1.0
+	github.com/go-gormigrate/gormigrate v1.0.0
 )

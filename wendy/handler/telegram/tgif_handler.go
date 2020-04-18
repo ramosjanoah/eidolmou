@@ -31,6 +31,6 @@ func (t *ChatHandler) addGif(m *tbot.Message) (err error) {
 		AdderID: int64(m.From.ID),
 	}
 
-	_, err = tgifService.AddNewGif(addForm)
+	_, err = tgifService.Add(addForm)
 	return err
 }

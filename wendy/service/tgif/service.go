@@ -3,14 +3,19 @@ package tgif
 import (
 	"github.com/ramosjanoah/eidolmou/wendy/repository"
 	"github.com/ramosjanoah/eidolmou/wendy/repository/actionbot"
+	"github.com/ramosjanoah/eidolmou/wendy/repository/tgif"
 )
 
 // list all the repository needed for this service
-var ActionBot repository.ActionBotRepository
+var (
+	ActionBotRepository repository.ActionBotRepository
+	TGifRepository      repository.GifRepository
+)
 
 // initialize the repository
 func init() {
-	ActionBot = actionbot.GetActionBot()
+	ActionBotRepository = actionbot.GetActionBot()
+	TGifRepository = tgif.GetGifRepository()
 }
 
 type TGif struct {

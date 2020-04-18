@@ -25,3 +25,7 @@ func MissingParameterError(field string) error {
 func PayloadMissingError() error {
 	return &CustomError{Message: "Sorry, but you sent the empty message", HTTPCode: 400}
 }
+
+func ErrorWhenInsertRow(instanceType string, detailedError error) error {
+	return &CustomError{Message: fmt.Sprintf("Error when create %s: %s", instanceType, detailedError.Error()), HTTPCode: 400}
+}

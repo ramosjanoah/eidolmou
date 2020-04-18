@@ -2,11 +2,12 @@ package tgif
 
 import (
 	"github.com/ramosjanoah/eidolmou/wendy/config"
+	"github.com/ramosjanoah/eidolmou/wendy/repository"
 )
 
-func GetGifRepository() ActionBotRepository {
-	if config.SqlDatabase == "POSTGRESQL" {
-		return GetGifPostgresqlRepository()
+func GetGifRepository() repository.GifRepository {
+	if config.SQLType == "MYSQL" {
+		return GetGifSqlRepository()
 	}
 
 	panic("SqlDatabase value is nil")

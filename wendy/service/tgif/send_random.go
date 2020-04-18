@@ -17,5 +17,5 @@ func SendMeGif(targetID int64) error {
 	// pick random animation file
 	rand.Seed(time.Now().Unix())
 	pickedFile := fmt.Sprintf("%s/wendy/asset/%s.gif", config.CurrentDir, WendyGifs[rand.Int()%len(WendyGifs)])
-	return ActionBot.SendAnimationFile(targetID, pickedFile)
+	return ActionBotRepository.SendAnimationFile(targetID, pickedFile)
 }

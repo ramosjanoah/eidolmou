@@ -2,6 +2,7 @@ package tgif
 
 import (
 	"github.com/ramosjanoah/eidolmou/wendy/errors"
+	"github.com/ramosjanoah/eidolmou/wendy/model/tgif"
 )
 
 type AddForm struct {
@@ -27,12 +28,21 @@ func (f *AddForm) Validate() (err error) {
 
 }
 
-func AddNewGif(form AddForm) (TGif, error) {
+func Add(form AddForm) (TGif, error) {
 	err := form.Validate()
 	if err != nil {
 		return TGif{}, err
 	}
 
-	ActionBot.SendMessage(form.AdderID, "Congrats, you succeeded to add this gif :)")
-	return TGif{}, nil
+	_, err = TGifRepository.Insert(tgif.CreateParams{
+		Name:    form.Name,
+		FileID:  form.FileID,
+		AdderID: form.AdderID,
+	})
+	if err != nil {
+		return TGif{}, err
+	}
+
+	err = ActionBotRepository.SendMessage(form.AdderID, "Congrats, you succeeded to add this gif :)")
+	return TGif{}, err
 }
