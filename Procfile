@@ -1,2 +1,2 @@
-bot: bin/bot
+web: bin/handler
 heartbeat: bin/heartbeat
