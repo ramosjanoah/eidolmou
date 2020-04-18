@@ -1,11 +1,29 @@
 package http
 
 import (
+	"fmt"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
+	"github.com/ramosjanoah/eidolmou/wendy/config"
 	"github.com/ramosjanoah/eidolmou/wendy/service"
+	"log"
 	"net/http"
 )
+
+type HttpHandler struct {
+	router chi.Router
+}
+
+func NewHttpHandler() *HttpHandler {
+	return &HttpHandler{
+		router: NewHttpRouter(),
+	}
+}
+
+func (h *HttpHandler) HttpListen() {
+	log.Println(fmt.Sprintf("Wendy is listening to your HTTP request in :%s", config.AppPort))
+	log.Println(http.ListenAndServe(":"+config.AppPort, h.router))
+}
 
 func NewHttpRouter() chi.Router {
 	router := chi.NewRouter()

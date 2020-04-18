@@ -10,17 +10,18 @@ import (
 )
 
 func main() {
+	handler := handler.NewHandler()
+
 	if config.BotToggle {
-		bot := handler.NewHandlerBot()
-
-		go bot.ChatListen()
-		go bot.HttpListen()
-
-		signals := make(chan os.Signal, 1)
-		signal.Notify(signals, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
-
-		<-signals
+		go handler.ChatListen()
 	} else {
-		log.Println("Wendy toggled off")
+		log.Println("Wendy's bot is toggled off.")
 	}
+
+	go handler.HttpListen()
+
+	signals := make(chan os.Signal, 1)
+	signal.Notify(signals, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
+
+	<-signals
 }

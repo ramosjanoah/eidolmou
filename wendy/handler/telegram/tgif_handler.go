@@ -6,11 +6,11 @@ import (
 	"github.com/yanzay/tbot/v2"
 )
 
-func (t *HandlerBot) sendMeGif(m *tbot.Message) (err error) {
+func (t *ChatHandler) sendMeGif(m *tbot.Message) (err error) {
 	return tgifService.SendMeGif(int64(m.From.ID))
 }
 
-func (t *HandlerBot) addGif(m *tbot.Message) (err error) {
+func (t *ChatHandler) addGif(m *tbot.Message) (err error) {
 
 	if m.Caption == "" {
 		return errors.PayloadMissingError()

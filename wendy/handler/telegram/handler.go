@@ -1,32 +1,23 @@
 package telegram
 
 import (
-	"fmt"
 	"github.com/ramosjanoah/eidolmou/wendy/config"
 	"github.com/ramosjanoah/eidolmou/wendy/errors"
-	"github.com/ramosjanoah/eidolmou/wendy/handler/http"
 	service "github.com/ramosjanoah/eidolmou/wendy/service"
 	"github.com/yanzay/tbot/v2"
 	"log"
-	netHttp "net/http"
 	"strconv"
 	"strings"
 )
 
-type HandlerBot struct {
-	Token    string
-	HttpPort string
-
+type ChatHandler struct {
+	Token     string
 	botServer *tbot.Server
-
-	heartbeatClient *netHttp.Client
-	heartbeatURL    string
 }
 
-func NewHandlerBot() *HandlerBot {
-	t := &HandlerBot{
-		Token:    config.BotToken,
-		HttpPort: config.AppPort,
+func NewChatHandler() *ChatHandler {
+	t := &ChatHandler{
+		Token: config.BotToken,
 	}
 
 	err := t.Initialize()
@@ -37,22 +28,15 @@ func NewHandlerBot() *HandlerBot {
 	return t
 }
 
-func (t *HandlerBot) ChatListen() {
-	log.Println("Wendy is listening for your chat..")
+func (t *ChatHandler) ChatListen() {
+	log.Println("Wendy is listening for your chat.")
 	t.botServer.Start()
 }
 
-func (t *HandlerBot) HttpListen() {
-	router := http.NewHttpRouter()
-
-	log.Println(fmt.Sprintf("Wendy is listening to your HTTP request in :%s", t.HttpPort))
-	log.Println(netHttp.ListenAndServe(":"+t.HttpPort, router))
-}
-
-func (t *HandlerBot) Initialize() error {
+func (t *ChatHandler) Initialize() error {
 	t.botServer = tbot.New(t.Token)
 
-	err := t.initializeBotHandler()
+	err := t.initializeBotChatHandler()
 	if err != nil {
 		return err
 	}
@@ -60,12 +44,12 @@ func (t *HandlerBot) Initialize() error {
 	return nil
 }
 
-func (t *HandlerBot) initializeBotHandler() error {
+func (t *ChatHandler) initializeBotChatHandler() error {
 	// create handling message here
 
 	t.botServer.HandleMessage(decorate("/areyouok", t.areYouOK))
 
-	// see tgif_handler.go
+	// see tgif_ChatHandler.go
 	t.botServer.HandleMessage(decorate("/sendmegif", t.sendMeGif))
 
 	// handle the message that
@@ -86,7 +70,7 @@ func (t *HandlerBot) initializeBotHandler() error {
 	return nil
 }
 
-func (t *HandlerBot) areYouOK(m *tbot.Message) (err error) {
+func (t *ChatHandler) areYouOK(m *tbot.Message) (err error) {
 	_, err = service.AreYouOK(int64(m.From.ID))
 	return err
 }
@@ -115,7 +99,7 @@ func parseArg(str string, defaultKey string) (key string, value string) {
 	splittedStr := strings.Split(str, "=")
 	if len(splittedStr) == 2 {
 		return splittedStr[0], splittedStr[1]
-	} else {
-		return defaultKey, str
 	}
+
+	return defaultKey, str
 }
