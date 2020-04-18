@@ -11,6 +11,7 @@ const telegramAPIURL = "https://api.telegram.org"
 
 var (
 	TbotClient *tbot.Client
+	Heartbeat  *http.Client
 )
 
 func init() {
@@ -19,5 +20,9 @@ func init() {
 			Timeout: 10 * time.Second,
 		}
 		TbotClient = tbot.NewClient(config.BotToken, &httpClient, telegramAPIURL)
+	}
+
+	if config.HeartbeatToggle {
+		Heartbeat = &http.Client{Timeout: 5 * time.Second}
 	}
 }

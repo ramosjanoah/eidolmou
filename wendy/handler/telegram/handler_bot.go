@@ -50,25 +50,6 @@ func (t *HandlerBot) HttpListen() {
 	log.Println(netHttp.ListenAndServe(":"+t.HttpPort, router))
 }
 
-func (t *HandlerBot) Heartbeat() {
-	if !config.HeartbeatToggle {
-		return
-	}
-
-	req, err := netHttp.NewRequest("GET", t.heartbeatURL, nil)
-	if err != nil {
-		panic("Heartbeat failed")
-	}
-
-	for {
-		_, err = t.heartbeatClient.Do(req)
-		if err != nil {
-			panic(fmt.Sprintf("Heartbeat failed, %s", err.Error()))
-		}
-		time.Sleep(3 * time.Minute)
-	}
-}
-
 func (t *HandlerBot) Initialize() error {
 	t.botServer = tbot.New(t.Token)
 
@@ -107,13 +88,6 @@ func (t *HandlerBot) initializeBotHandler() error {
 
 		return errors.DontUnderstandError()
 	}))
-
-	return nil
-}
-
-func (t *HandlerBot) initializeHeartbeat() error {
-	t.heartbeatURL = http.HeartbeatURL
-	t.heartbeatClient = &netHttp.Client{}
 
 	return nil
 }

@@ -15,7 +15,6 @@ func main() {
 
 		go bot.ChatListen()
 		go bot.HttpListen()
-		go bot.Heartbeat()
 
 		signals := make(chan os.Signal, 1)
 		signal.Notify(signals, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
