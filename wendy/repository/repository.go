@@ -13,6 +13,6 @@ type ActionBotRepository interface {
 }
 
 type GifRepository interface {
-	Check() error
 	Insert(params tgif.CreateParams) (*tgif.TGif, error)
+	GetRandom() (*tgif.TGif, error)
 }

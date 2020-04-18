@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/ramosjanoah/eidolmou/wendy/errors"
 	"github.com/ramosjanoah/eidolmou/wendy/model/message"
-	"github.com/ramosjanoah/eidolmou/wendy/model/tgif"
+	tgifModel "github.com/ramosjanoah/eidolmou/wendy/model/tgif"
 )
 
 type AddForm struct {
@@ -36,7 +36,7 @@ func Add(form AddForm) (TGif, error) {
 		return TGif{}, err
 	}
 
-	tgif, err := TGifRepository.Insert(tgif.CreateParams{
+	tgifModel, err := TGifRepository.Insert(tgifModel.CreateParams{
 		Name:    form.Name,
 		FileID:  form.FileID,
 		AdderID: form.AdderID,
@@ -45,10 +45,16 @@ func Add(form AddForm) (TGif, error) {
 		return TGif{}, err
 	}
 
+	tgif := parseFromModel(tgifModel)
+
 	m := message.New("Congrats, you succeeded to add this gif :)").
 		AddNewLine(fmt.Sprintf("*ID:* %d", tgif.ID)).
-		AddNewLine(fmt.Sprintf("*Name:* '%s'", tgif.Name))
+		AddNewLine(fmt.Sprintf("*Adder:* '%s'", tgif.Name))
 
 	err = ActionBotRepository.SendMessage(form.AdderID, m)
-	return TGif{}, err
+	if err != nil {
+		return TGif{}, err
+	}
+
+	return tgif, err
 }

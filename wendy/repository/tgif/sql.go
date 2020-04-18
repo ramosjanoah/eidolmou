@@ -8,6 +8,8 @@ import (
 	"time"
 )
 
+var model = &tgif.TGif{}
+
 type GifSqlImplmentation struct {
 	conn *gorm.DB
 }
@@ -34,4 +36,20 @@ func (g *GifSqlImplmentation) Insert(params tgif.CreateParams) (*tgif.TGif, erro
 	}
 
 	return res.Value.(*tgif.TGif), nil
+}
+
+func (g *GifSqlImplmentation) GetRandom() (*tgif.TGif, error) {
+
+	randomRows := &[]tgif.TGif{}
+	res := g.conn.Limit(1).Order(gorm.Expr("rand()")).Find(randomRows)
+
+	if res.Error != nil {
+		return nil, res.Error
+	}
+
+	if randomRows == nil || len(*randomRows) == 0 {
+		return nil, errors.NotFoundError("TGif")
+	}
+
+	return &(*randomRows)[0], nil
 }

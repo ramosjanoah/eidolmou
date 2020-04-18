@@ -29,3 +29,7 @@ func PayloadMissingError() error {
 func ErrorWhenInsertRow(instanceType string, detailedError error) error {
 	return &CustomError{Message: fmt.Sprintf("Error when create %s: %s", instanceType, detailedError.Error()), HTTPCode: 400}
 }
+
+func NotFoundError(instanceType string) error {
+	return &CustomError{Message: fmt.Sprintf("%s not found :(", instanceType), HTTPCode: 404}
+}
