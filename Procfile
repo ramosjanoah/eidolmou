@@ -1,1 +1,2 @@
-web: ls -R && bin/app
+bot: bin/bot
+heartbeat: bin/heartbeat
