@@ -11,7 +11,6 @@ import (
 	netHttp "net/http"
 	"strconv"
 	"strings"
-	"time"
 )
 
 type HandlerBot struct {
@@ -54,11 +53,6 @@ func (t *HandlerBot) Initialize() error {
 	t.botServer = tbot.New(t.Token)
 
 	err := t.initializeBotHandler()
-	if err != nil {
-		return err
-	}
-
-	err = t.initializeHeartbeat()
 	if err != nil {
 		return err
 	}

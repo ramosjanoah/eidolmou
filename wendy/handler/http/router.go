@@ -7,11 +7,6 @@ import (
 	"net/http"
 )
 
-var (
-	AppURL       = "https://white-wendy.herokuapp.com"
-	HeartbeatURL = AppURL + "/wendy/areyouok"
-)
-
 func NewHttpRouter() chi.Router {
 	router := chi.NewRouter()
 	router.Use(middleware.RequestID)
