@@ -1,7 +1,9 @@
 package tgif
 
 import (
+	"fmt"
 	"github.com/ramosjanoah/eidolmou/wendy/errors"
+	"github.com/ramosjanoah/eidolmou/wendy/model/message"
 	"github.com/ramosjanoah/eidolmou/wendy/model/tgif"
 )
 
@@ -34,7 +36,7 @@ func Add(form AddForm) (TGif, error) {
 		return TGif{}, err
 	}
 
-	_, err = TGifRepository.Insert(tgif.CreateParams{
+	tgif, err := TGifRepository.Insert(tgif.CreateParams{
 		Name:    form.Name,
 		FileID:  form.FileID,
 		AdderID: form.AdderID,
@@ -43,6 +45,10 @@ func Add(form AddForm) (TGif, error) {
 		return TGif{}, err
 	}
 
-	err = ActionBotRepository.SendMessage(form.AdderID, "Congrats, you succeeded to add this gif :)")
+	m := message.New("Congrats, you succeeded to add this gif :)").
+		AddNewLine(fmt.Sprintf("*ID:* %d", tgif.ID)).
+		AddNewLine(fmt.Sprintf("*Name:* '%s'", tgif.Name))
+
+	err = ActionBotRepository.SendMessage(form.AdderID, m)
 	return TGif{}, err
 }

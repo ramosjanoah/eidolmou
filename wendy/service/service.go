@@ -17,7 +17,7 @@ func init() {
 
 func AreYouOK(targetID int64) (string, error) {
 	// send message response for 'are you ok'
-	err := ActionBot.SendMessage(targetID, AreYouOKResponseMsg)
+	err := ActionBot.SendString(targetID, AreYouOKResponseMsg)
 	if err != nil {
 		return "", err
 	}
@@ -31,11 +31,11 @@ func PleaseCheckMe() error {
 	}
 
 	// send check me message to admin
-	return ActionBot.SendMessage(config.AdminID, PleaseCheckMeMsg)
+	return ActionBot.SendString(config.AdminID, PleaseCheckMeMsg)
 }
 
 func ErrorResponseCallback(targetID int64, err error) error {
-	return ActionBot.SendMessage(targetID, err.Error())
+	return ActionBot.SendString(targetID, err.Error())
 }
 
 func sugarCoatError(err error) string {

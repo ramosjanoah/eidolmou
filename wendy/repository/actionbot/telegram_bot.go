@@ -2,6 +2,7 @@ package actionbot
 
 import (
 	"github.com/ramosjanoah/eidolmou/wendy/connection"
+	"github.com/ramosjanoah/eidolmou/wendy/model/message"
 	"github.com/yanzay/tbot/v2"
 	"strconv"
 )
@@ -14,8 +15,12 @@ func GetTelegramActionBot() *TelegramActionBot {
 	return &TelegramActionBot{connection.TbotClient}
 }
 
-func (a *TelegramActionBot) SendMessage(targetID int64, message string) error {
-	_, err := a.BotClient.SendMessage(strconv.Itoa(int(targetID)), message)
+func (a *TelegramActionBot) SendString(targetID int64, str string) error {
+	_, err := a.BotClient.SendMessage(strconv.Itoa(int(targetID)), str)
+	return err
+}
+func (a *TelegramActionBot) SendMessage(targetID int64, m *message.Message) error {
+	_, err := a.BotClient.SendMessage(strconv.Itoa(int(targetID)), m.GetString(), tbot.OptParseModeMarkdown)
 	return err
 }
 
