@@ -2,15 +2,16 @@ package telegram
 
 import (
 	"github.com/ramosjanoah/eidolmou/wendy/errors"
+	"github.com/ramosjanoah/eidolmou/wendy/sctx"
 	tgifService "github.com/ramosjanoah/eidolmou/wendy/service/tgif"
 	"github.com/yanzay/tbot/v2"
 )
 
-func (t *ChatHandler) sendMeGif(m *tbot.Message) (err error) {
-	return tgifService.SendMeGif(int64(m.From.ID))
+func (t *ChatHandler) sendMeGif(sctx sctx.Context, m *tbot.Message) (err error) {
+	return tgifService.SendMeGif(sctx, int64(m.From.ID))
 }
 
-func (t *ChatHandler) addGif(m *tbot.Message) (err error) {
+func (t *ChatHandler) addGif(sctx sctx.Context, m *tbot.Message) (err error) {
 
 	if m.Caption == "" {
 		return errors.PayloadMissingError()
@@ -31,6 +32,6 @@ func (t *ChatHandler) addGif(m *tbot.Message) (err error) {
 		AdderID: int64(m.From.ID),
 	}
 
-	_, err = tgifService.Add(addForm)
+	_, err = tgifService.Add(sctx, addForm)
 	return err
 }

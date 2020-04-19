@@ -1,12 +1,21 @@
 package tgif
 
-func SendMeGif(targetID int64) error {
-	// get how many gifs are there
+import (
+	"github.com/ramosjanoah/eidolmou/wendy/errors"
+	"github.com/ramosjanoah/eidolmou/wendy/sctx"
+)
 
-	randomTGif, err := TGifRepository.GetRandom()
+func SendMeGif(sctx sctx.Context, targetID int64) error {
+	select {
+	case <-sctx.Done():
+		return errors.TimeoutError()
+	default:
+	}
+
+	randomTGif, err := TGifRepository.GetRandom(sctx)
 	if err != nil {
 		return err
 	}
 
-	return ActionBotRepository.SendAnimation(targetID, randomTGif.FileID)
+	return ActionBotRepository.SendAnimation(sctx, targetID, randomTGif.FileID)
 }

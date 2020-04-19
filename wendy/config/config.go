@@ -5,6 +5,7 @@ import (
 	"github.com/subosito/gotenv"
 	"os"
 	"strconv"
+	"time"
 )
 
 var (
@@ -27,6 +28,8 @@ var (
 	SQLHost     string
 	SQLPort     string
 	SQLDatabase string
+
+	ChatTimeout time.Duration
 )
 
 func init() {
@@ -55,6 +58,8 @@ func init() {
 	CurrentDir = dir
 
 	initSQL()
+
+	ChatTimeout = 10 * time.Second
 }
 
 func initSQL() {

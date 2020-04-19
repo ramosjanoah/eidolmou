@@ -2,7 +2,9 @@ package actionbot
 
 import (
 	"github.com/ramosjanoah/eidolmou/wendy/connection"
+	"github.com/ramosjanoah/eidolmou/wendy/errors"
 	"github.com/ramosjanoah/eidolmou/wendy/model/message"
+	"github.com/ramosjanoah/eidolmou/wendy/sctx"
 	"github.com/yanzay/tbot/v2"
 	"strconv"
 )
@@ -15,21 +17,51 @@ func GetTelegramActionBot() *TelegramActionBot {
 	return &TelegramActionBot{connection.TbotClient}
 }
 
-func (a *TelegramActionBot) SendString(targetID int64, str string) error {
-	_, err := a.BotClient.SendMessage(strconv.Itoa(int(targetID)), str)
+func (a *TelegramActionBot) SendString(sctx sctx.Context, targetID int64, str string) (err error) {
+	select {
+	case <-sctx.Done():
+		return errors.TimeoutError()
+	default:
+	}
+	ctxl := sctx.AddLog("TelegramActionBot", "SendString").
+		WithInfo("parameter:targetID", targetID).
+		WithInfo("parameter:str", str)
+	defer func() {
+		ctxl.EndWithError(err)
+	}()
+
+	_, err = a.BotClient.SendMessage(strconv.Itoa(int(targetID)), str)
 	return err
 }
-func (a *TelegramActionBot) SendMessage(targetID int64, m *message.Message) error {
+func (a *TelegramActionBot) SendMessage(sctx sctx.Context, targetID int64, m *message.Message) error {
+	select {
+	case <-sctx.Done():
+		return errors.TimeoutError()
+	default:
+	}
+
 	_, err := a.BotClient.SendMessage(strconv.Itoa(int(targetID)), m.GetString(), tbot.OptParseModeMarkdown)
 	return err
 }
 
-func (a *TelegramActionBot) SendAnimation(targetID int64, animationURL string) error {
+func (a *TelegramActionBot) SendAnimation(sctx sctx.Context, targetID int64, animationURL string) error {
+	select {
+	case <-sctx.Done():
+		return errors.TimeoutError()
+	default:
+	}
+
 	_, err := a.BotClient.SendAnimation(strconv.Itoa(int(targetID)), animationURL)
 	return err
 }
 
-func (a *TelegramActionBot) SendAnimationFile(targetID int64, animationFilename string) error {
+func (a *TelegramActionBot) SendAnimationFile(sctx sctx.Context, targetID int64, animationFilename string) error {
+	select {
+	case <-sctx.Done():
+		return errors.TimeoutError()
+	default:
+	}
+
 	_, err := a.BotClient.SendAnimationFile(strconv.Itoa(int(targetID)), animationFilename)
 	return err
 }

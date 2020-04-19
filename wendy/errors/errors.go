@@ -33,3 +33,7 @@ func ErrorWhenInsertRow(instanceType string, detailedError error) error {
 func NotFoundError(instanceType string) error {
 	return &CustomError{Message: fmt.Sprintf("%s not found :(", instanceType), HTTPCode: 404}
 }
+
+func TimeoutError() error {
+	return &CustomError{Message: "Timeout", HTTPCode: 408}
+}

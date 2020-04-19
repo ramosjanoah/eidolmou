@@ -2,37 +2,33 @@ package telegram
 
 import (
 	"errors"
-	"fmt"
+	"github.com/ramosjanoah/eidolmou/wendy/sctx"
 	"github.com/ramosjanoah/eidolmou/wendy/service"
 	"github.com/yanzay/tbot/v2"
-	"log"
 	"time"
 )
 
-func decorate(command string, handleFunc func(m *tbot.Message) error) (string, func(m *tbot.Message)) {
+func decorate(command string, handleFunc func(ctx sctx.Context, m *tbot.Message) error) (string, func(m *tbot.Message)) {
 
 	decoratedFunction := func(m *tbot.Message) {
-
 		var err error
-		startTime := time.Now()
 
+		sctx := sctx.New().WithTimeout(10 * time.Second)
 		defer func() {
-			elapsedTime := time.Since(startTime).Seconds()
-
 			if r := recover(); r != nil {
 				err = errors.New(r.(string))
 			}
-
 			if err != nil {
-				_ = service.ErrorResponseCallback(int64(m.From.ID), err)
-				log.Println(fmt.Sprintf(`{"state":"failed", "msg": "%s", "duration":%g, "function_caller":"%s"}`, err.Error(), elapsedTime, command))
-			} else {
-				log.Println(fmt.Sprintf(`{"state":"success", "duration":%g, "function_caller":"%s"}`, elapsedTime, command))
+				sctx.SetFinalError(err)
+				_ = service.ErrorResponseCallback(sctx, int64(m.From.ID), err)
 			}
+
+			sctx.End()
+			println(sctx.GetLogs())
 		}()
 
 		// do the handling
-		err = handleFunc(m)
+		err = handleFunc(sctx, m)
 	}
 
 	return command, decoratedFunction

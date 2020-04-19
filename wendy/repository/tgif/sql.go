@@ -5,6 +5,7 @@ import (
 	"github.com/ramosjanoah/eidolmou/wendy/connection"
 	"github.com/ramosjanoah/eidolmou/wendy/errors"
 	"github.com/ramosjanoah/eidolmou/wendy/model/tgif"
+	"github.com/ramosjanoah/eidolmou/wendy/sctx"
 	"time"
 )
 
@@ -18,9 +19,13 @@ func GetGifSqlRepository() *GifSqlImplmentation {
 	return &GifSqlImplmentation{conn: connection.SQLConn}
 }
 
-func (g *GifSqlImplmentation) Check() error { return nil }
+func (g *GifSqlImplmentation) Insert(sctx sctx.Context, params tgif.CreateParams) (*tgif.TGif, error) {
+	select {
+	case <-sctx.Done():
+		return &tgif.TGif{}, errors.TimeoutError()
+	default:
+	}
 
-func (g *GifSqlImplmentation) Insert(params tgif.CreateParams) (*tgif.TGif, error) {
 	res := g.conn.Create(&tgif.TGif{
 		Name:              params.Name,
 		FileID:            params.FileID,
@@ -38,7 +43,12 @@ func (g *GifSqlImplmentation) Insert(params tgif.CreateParams) (*tgif.TGif, erro
 	return res.Value.(*tgif.TGif), nil
 }
 
-func (g *GifSqlImplmentation) GetRandom() (*tgif.TGif, error) {
+func (g *GifSqlImplmentation) GetRandom(sctx sctx.Context) (*tgif.TGif, error) {
+	select {
+	case <-sctx.Done():
+		return &tgif.TGif{}, errors.TimeoutError()
+	default:
+	}
 
 	randomRows := &[]tgif.TGif{}
 	res := g.conn.Limit(1).Order(gorm.Expr("rand()")).Find(randomRows)

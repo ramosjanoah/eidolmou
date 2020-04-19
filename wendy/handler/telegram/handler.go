@@ -3,6 +3,7 @@ package telegram
 import (
 	"github.com/ramosjanoah/eidolmou/wendy/config"
 	"github.com/ramosjanoah/eidolmou/wendy/errors"
+	"github.com/ramosjanoah/eidolmou/wendy/sctx"
 	service "github.com/ramosjanoah/eidolmou/wendy/service"
 	"github.com/yanzay/tbot/v2"
 	"log"
@@ -53,14 +54,14 @@ func (t *ChatHandler) initializeBotChatHandler() error {
 	t.botServer.HandleMessage(decorate("/sendmegif", t.sendMeGif))
 
 	// handle the message that
-	t.botServer.HandleMessage(decorate("", func(m *tbot.Message) error {
+	t.botServer.HandleMessage(decorate("", func(sctx sctx.Context, m *tbot.Message) error {
 
 		// handling document and get the command from caption
 		if m.Document != nil {
 			pattern, _ := parseCaption(m.Caption)
 			switch pattern {
 			case "/addGif":
-				return t.addGif(m)
+				return t.addGif(sctx, m)
 			}
 		}
 
@@ -70,8 +71,8 @@ func (t *ChatHandler) initializeBotChatHandler() error {
 	return nil
 }
 
-func (t *ChatHandler) areYouOK(m *tbot.Message) (err error) {
-	_, err = service.AreYouOK(int64(m.From.ID))
+func (t *ChatHandler) areYouOK(sctx sctx.Context, m *tbot.Message) (err error) {
+	_, err = service.AreYouOK(sctx, int64(m.From.ID))
 	return err
 }
 
