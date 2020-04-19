@@ -33,35 +33,53 @@ func (a *TelegramActionBot) SendString(sctx sctx.Context, targetID int64, str st
 	_, err = a.BotClient.SendMessage(strconv.Itoa(int(targetID)), str)
 	return err
 }
-func (a *TelegramActionBot) SendMessage(sctx sctx.Context, targetID int64, m *message.Message) error {
+func (a *TelegramActionBot) SendMessage(sctx sctx.Context, targetID int64, m *message.Message) (err error) {
 	select {
 	case <-sctx.Done():
 		return errors.TimeoutError()
 	default:
 	}
+	ctxl := sctx.AddLog("TelegramActionBot", "SendMessage").
+		WithInfo("parameter:targetID", targetID).
+		WithInfo("parameter:m.GetString()", m.GetString())
+	defer func() {
+		ctxl.EndWithError(err)
+	}()
 
-	_, err := a.BotClient.SendMessage(strconv.Itoa(int(targetID)), m.GetString(), tbot.OptParseModeMarkdown)
+	_, err = a.BotClient.SendMessage(strconv.Itoa(int(targetID)), m.GetString(), tbot.OptParseModeMarkdown)
 	return err
 }
 
-func (a *TelegramActionBot) SendAnimation(sctx sctx.Context, targetID int64, animationURL string) error {
+func (a *TelegramActionBot) SendAnimation(sctx sctx.Context, targetID int64, animationURL string) (err error) {
 	select {
 	case <-sctx.Done():
 		return errors.TimeoutError()
 	default:
 	}
+	ctxl := sctx.AddLog("TelegramActionBot", "SendAnimation").
+		WithInfo("parameter:targetID", targetID).
+		WithInfo("parameter:animationURL", animationURL)
+	defer func() {
+		ctxl.EndWithError(err)
+	}()
 
-	_, err := a.BotClient.SendAnimation(strconv.Itoa(int(targetID)), animationURL)
+	_, err = a.BotClient.SendAnimation(strconv.Itoa(int(targetID)), animationURL)
 	return err
 }
 
-func (a *TelegramActionBot) SendAnimationFile(sctx sctx.Context, targetID int64, animationFilename string) error {
+func (a *TelegramActionBot) SendAnimationFile(sctx sctx.Context, targetID int64, animationFilename string) (err error) {
 	select {
 	case <-sctx.Done():
 		return errors.TimeoutError()
 	default:
 	}
+	ctxl := sctx.AddLog("TelegramActionBot", "SendAnimationFile").
+		WithInfo("parameter:targetID", targetID).
+		WithInfo("parameter:animationFilename", animationFilename)
+	defer func() {
+		ctxl.EndWithError(err)
+	}()
 
-	_, err := a.BotClient.SendAnimationFile(strconv.Itoa(int(targetID)), animationFilename)
+	_, err = a.BotClient.SendAnimationFile(strconv.Itoa(int(targetID)), animationFilename)
 	return err
 }

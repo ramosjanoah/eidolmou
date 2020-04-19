@@ -9,9 +9,9 @@ import (
 )
 
 type AddForm struct {
-	Name    string
-	FileID  string
-	AdderID int64
+	Name    string `json:"name"`
+	FileID  string `json:"file_id"`
+	AdderID int64  `json:"adder_id"`
 }
 
 func (f *AddForm) Validate() (err error) {
@@ -31,14 +31,20 @@ func (f *AddForm) Validate() (err error) {
 
 }
 
-func Add(sctx sctx.Context, form AddForm) (TGif, error) {
+func Add(sctx sctx.Context, form AddForm) (tgif TGif, err error) {
 	select {
 	case <-sctx.Done():
 		return TGif{}, errors.TimeoutError()
 	default:
 	}
 
-	err := form.Validate()
+	ctxl := sctx.AddLog("service/tgif", "Add").
+		WithInfo("parameter:form", form)
+	defer func() {
+		ctxl.EndWithError(err).WithInfo("result", tgif)
+	}()
+
+	err = form.Validate()
 	if err != nil {
 		return TGif{}, err
 	}
@@ -52,7 +58,7 @@ func Add(sctx sctx.Context, form AddForm) (TGif, error) {
 		return TGif{}, err
 	}
 
-	tgif := parseFromModel(tgifModel)
+	tgif = parseFromModel(tgifModel)
 
 	m := message.New("Congrats, you succeeded to add this gif :)").
 		AddNewLine(fmt.Sprintf("*ID:* %d", tgif.ID)).

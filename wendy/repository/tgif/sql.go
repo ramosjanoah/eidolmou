@@ -19,12 +19,18 @@ func GetGifSqlRepository() *GifSqlImplmentation {
 	return &GifSqlImplmentation{conn: connection.SQLConn}
 }
 
-func (g *GifSqlImplmentation) Insert(sctx sctx.Context, params tgif.CreateParams) (*tgif.TGif, error) {
+func (g *GifSqlImplmentation) Insert(sctx sctx.Context, params tgif.CreateParams) (t *tgif.TGif, err error) {
 	select {
 	case <-sctx.Done():
 		return &tgif.TGif{}, errors.TimeoutError()
 	default:
 	}
+
+	ctxl := sctx.AddLog("GifSqlImplmentation", "Insert").
+		WithInfo("parameter:params", params)
+	defer func() {
+		ctxl.EndWithError(err).WithInfo("tgif", t)
+	}()
 
 	res := g.conn.Create(&tgif.TGif{
 		Name:              params.Name,
@@ -40,15 +46,21 @@ func (g *GifSqlImplmentation) Insert(sctx sctx.Context, params tgif.CreateParams
 		return &tgif.TGif{}, errors.ErrorWhenInsertRow("TGif", res.Error)
 	}
 
-	return res.Value.(*tgif.TGif), nil
+	t = res.Value.(*tgif.TGif)
+	return t, nil
 }
 
-func (g *GifSqlImplmentation) GetRandom(sctx sctx.Context) (*tgif.TGif, error) {
+func (g *GifSqlImplmentation) GetRandom(sctx sctx.Context) (t *tgif.TGif, err error) {
 	select {
 	case <-sctx.Done():
 		return &tgif.TGif{}, errors.TimeoutError()
 	default:
 	}
+
+	ctxl := sctx.AddLog("GifSqlImplmentation", "GetRandom")
+	defer func() {
+		ctxl.EndWithError(err).WithInfo("tgif", t)
+	}()
 
 	randomRows := &[]tgif.TGif{}
 	res := g.conn.Limit(1).Order(gorm.Expr("rand()")).Find(randomRows)

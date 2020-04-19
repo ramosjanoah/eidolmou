@@ -23,7 +23,7 @@ func AreYouOK(sctx sctx.Context, targetID int64) (result string, err error) {
 		return "", errors.TimeoutError()
 	default:
 	}
-	ctxl := sctx.AddLog("Service", "AreYouOK").WithInfo("parameter:targetID", targetID)
+	ctxl := sctx.AddLog("service", "AreYouOK").WithInfo("parameter:targetID", targetID)
 	defer func() {
 		ctxl.EndWithError(err)
 	}()
@@ -38,11 +38,10 @@ func AreYouOK(sctx sctx.Context, targetID int64) (result string, err error) {
 }
 
 func PleaseCheckMe(sctx sctx.Context) (err error) {
-	select {
-	case <-sctx.Done():
-		return errors.TimeoutError()
-	default:
-	}
+	ctxl := sctx.AddLog("service", "PleaseCheckMe")
+	defer func() {
+		ctxl.EndWithError(err)
+	}()
 
 	if config.AdminID == 0 {
 		return nil
@@ -52,12 +51,11 @@ func PleaseCheckMe(sctx sctx.Context) (err error) {
 	return ActionBot.SendString(sctx, config.AdminID, PleaseCheckMeMsg)
 }
 
-func ErrorResponseCallback(sctx sctx.Context, targetID int64, err error) error {
-	select {
-	case <-sctx.Done():
-		return errors.TimeoutError()
-	default:
-	}
+func ErrorResponseCallback(sctx sctx.Context, targetID int64, err error) (callbackErr error) {
+	ctxl := sctx.AddLog("service", "ErrorResponseCallback").WithInfo("parameter:targetID", targetID)
+	defer func() {
+		ctxl.EndWithError(callbackErr)
+	}()
 
 	return ActionBot.SendString(sctx, targetID, err.Error())
 }

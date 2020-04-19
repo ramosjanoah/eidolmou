@@ -4,7 +4,6 @@ package sctx
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"golang.org/x/net/context"
 	"time"
@@ -33,7 +32,7 @@ type superContext struct {
 	duration   float64
 	startTime  time.Time
 	endTime    time.Time
-	finalError string
+	finalError *string
 	logs       []*Log
 }
 
@@ -53,7 +52,7 @@ func (sctx *superContext) GetLogs() string {
 		StartTime  time.Time `json:"start_time"`
 		EndTime    time.Time `json:"end_time"`
 		Duration   float64   `json:"duration"`
-		FinalError string    `json:"final_error"`
+		FinalError *string   `json:"final_error"`
 		Logs       []*Log    `json:"logs"`
 	}{
 		StartTime:  sctx.startTime,
@@ -89,7 +88,7 @@ type Log struct {
 	Duration  float64                `json:"duration"`
 	Entity    string                 `json:"entity"`
 	Action    string                 `json:"action"`
-	Error     error                  `json:"error"`
+	Error     *string                `json:"error"`
 	InfoMaps  map[string]interface{} `json:"additional_info"`
 }
 
@@ -101,16 +100,18 @@ func (l *Log) WithInfo(key string, value interface{}) *Log {
 func (l *Log) EndWithError(err error) *Log {
 	l.EndTime = time.Now()
 	l.Duration = time.Since(l.StartTime).Seconds()
-	l.Error = errors.New("test")
+	if err != nil {
+		strError := err.Error()
+		l.Error = &strError
+	}
 
 	return l
 }
 
 func (sctx *superContext) SetFinalError(err error) {
 	if err != nil {
-		sctx.finalError = ""
-	} else {
-		sctx.finalError = err.Error()
+		strError := err.Error()
+		sctx.finalError = &strError
 	}
 }
 

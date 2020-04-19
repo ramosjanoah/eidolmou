@@ -20,11 +20,11 @@ func init() {
 }
 
 type TGif struct {
-	ID            int64
-	Name          string
-	FileID        string
-	AdderUsername string
-	Valid         bool
+	ID            int64  `json:"id"`
+	Name          string `json:"name"`
+	FileID        string `json:"file_id"`
+	AdderUsername string `json:"adder_username"`
+	Valid         bool   `json:"valid"`
 }
 
 func parseFromModel(modelObject *tgifModel.TGif) TGif {
